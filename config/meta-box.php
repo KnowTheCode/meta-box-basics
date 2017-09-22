@@ -13,9 +13,6 @@ namespace KnowTheCode\MetaBoxBasics;
 
 return array(
 	'add_meta_box' => array(
-		// The key that holds all of the custom fields
-		// in the $_POST[ $custom_field_key ]
-		'custom_field_key'  => '',
 		// Meta box ID (used in the 'id' attribute for the meta box)
 		'id'            => '',
 		// Title of the meta box
@@ -33,6 +30,9 @@ return array(
 		// Send as an array of arguments.
 		'callback_args' => array(),
 	),
+	// The key that holds all of the custom fields
+	// in the $_POST[ $custom_field_key ]
+	'custom_field_key'  => '',
 	'nonce'        => array(
 		'nonce_action' => '',
 		'nonce_name'   => '',

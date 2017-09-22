@@ -78,7 +78,7 @@ function save_meta_box( $post_id, $post ) {
 	if ( ! is_ok_to_save_custom_field(
 		$config['nonce']['nonce_name'],
 		$config['nonce']['nonce_action'],
-		$config['post_key'],
+		$config['custom_field_key'],
 		$post->post_type )
 	) {
 		return;
@@ -86,7 +86,7 @@ function save_meta_box( $post_id, $post ) {
 
 	// Merge the metadata.
 	$data = wp_parse_args(
-		$_POST[ $config['post_key'] ],
+		$_POST[ $config['custom_field_key'] ],
 		$config['metadata']
 	);
 
