@@ -1,8 +1,6 @@
 # Meta Box Basics
 
-This plugin is a companion to the [Meta Box Basics Lab](https://knowthecode.io/labs/meta-box-basics) on [Know the Code](https://knowthecode.io).  It provides a boilerplate you can use for every meta box you create.
-
-This plugin accepts a configuration file into the meta box generator.  Using the runtime configuration parameters, you can craft different meta boxes for your projects.
+This plugin is a companion to the [Meta Box Basics Lab](https://knowthecode.io/labs/meta-box-basics) on [Know the Code](https://knowthecode.io).
 
 ## Installation
 
@@ -18,8 +16,4 @@ This plugin accepts a configuration file into the meta box generator.  Using the
 5. Log into your WordPress website.
 6. Go to Plugins and activate the Meta Box Basics plugin.
 
-Then go do the lab with me to build a meta box from scratch.  We'll use this boilerplate for multiple labs including building a repeater as you explore JavaScript too.
-
-## Examples
-
-Various examples are shown in the branches.
+Then go do the lab with me to build a meta box from scratch.

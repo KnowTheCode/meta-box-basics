@@ -9,7 +9,7 @@
  * @wordpress-plugin
  * Plugin Name: Meta Box Basics WordPress Plugin
  * Plugin URI:  https://github.com/KnowTheCode/meta-box-basics
- * Description: A boilerplate for creating custom meta boxes from scratch.
+ * Description: Custom meta box basics plugin to add a custom meta box to our sandbox.
  * Version:     1.0.0
  * Author:      hellofromTonya
  * Author URI:  https://KnowTheCode.io
@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Setup the plugin's constants.
  *
- * @since 1.0.3
+ * @since 1.0.0
  *
  * @return void
  */
