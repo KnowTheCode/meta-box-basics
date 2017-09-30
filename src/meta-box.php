@@ -13,7 +13,7 @@ namespace KnowTheCode\MetaBoxBasics;
 
 use WP_Post;
 
-add_action( 'admin_menu', __NAMESPACE__ . '\register_meta_box' );
+add_action( 'admin_menu', __NAMESPACE__ . '\register_meta_box', 0 );
 /**
  * Register the meta box.
  *
@@ -26,7 +26,7 @@ function register_meta_box() {
 		'mbbasics_subtitle',
 		__( 'Subtitle', 'mbbasics' ),
 		__NAMESPACE__ . '\render_meta_box',
-		'post'
+		array( 'post' )
 	);
 }
 
@@ -36,15 +36,17 @@ function register_meta_box() {
  * @since 1.0.0
  *
  * @param WP_Post $post Instance of the post for this meta box
- * @param array $meta_box Array of meta box arguments
+ * @param array $meta_box_args Array of meta box arguments
  *
  * @return void
  */
-function render_meta_box( WP_Post $post, array $meta_box ) {
+function render_meta_box( WP_Post $post, array $meta_box_args ) {
 	// Security with a nonce
 	wp_nonce_field( 'mbbasics_save', 'mbbasics_nonce' );
 
 	// Get the metadata
+	$subtitle      = get_post_meta( $post->ID, 'subtitle', true );
+	$show_subtitle = get_post_meta( $post->ID, 'show_subtitle', true );
 
 	// Do any processing that needs to be done
 
@@ -64,18 +66,40 @@ add_action( 'save_post', __NAMESPACE__ . '\save_meta_box', 10, 2 );
  * @return void
  */
 function save_meta_box( $post_id, $post ) {
-	// If the nonce doesn't match, return false.
-	if ( ! wp_verify_nonce( mbbasics_nonce, 'mbbasics_save' ) ) {
-		return false;
-	}
-
-	// If there's no data, return false.
-	if ( ! isset( $_POST['mbbasics'] ) ) {
+	// If this is not the right meta box, then bail out.
+	if ( ! array_key_exists( 'mbbasics', $_POST ) ) {
 		return;
 	}
 
-	// Merge the metadata.
+	// If the nonce doesn't match, return false.
+	if ( ! wp_verify_nonce( $_POST['mbbasics_nonce'], 'mbbasics_save' ) ) {
+		return false;
+	}
 
-	// Loop through the custom fields and update the `wp_postmeta` database.
+	// Merge with defaults.
+	$metadata = wp_parse_args(
+		$_POST['mbbasics'],
+		// defaults
+		array(
+			'subtitle'      => '',
+			'show_subtitle' => 0,
+		)
+	);
 
+	foreach ( $metadata as $meta_key => $value ) {
+		// if no value, delete the post meta record.
+		if ( ! $value ) {
+			delete_post_meta( $post_id, $meta_key );
+			continue;
+		}
+
+		// validation and sanitizing
+		if ( 'subtitle' === $meta_key ) {
+			$value = sanitize_text_field( $value );
+		} else {
+			$value = 1;
+		}
+
+		update_post_meta( $post_id, $meta_key, $value );
+	}
 }
