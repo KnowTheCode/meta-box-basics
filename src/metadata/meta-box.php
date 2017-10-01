@@ -181,7 +181,7 @@ function save_custom_fields( $meta_box_key, $post_id ) {
 
 	foreach ( $metadata as $meta_key => $value ) {
 		// if no value, delete the post meta record.
-		if ( ! $value ) {
+		if ( $config['delete_state'][$meta_key] === $value ) {
 			delete_post_meta( $post_id, $meta_key );
 			continue;
 		}
