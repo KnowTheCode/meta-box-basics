@@ -10,9 +10,20 @@
  */
 
 return array(
-	// store key => config for this meta box.
+	/************************************************************
+	 * Configure a unique ID for your meta box.
+	 *
+	 * This ID is used when running add_meta_box and for storing
+	 * in the Config Store.
+	 ***********************************************************/
 	'metabox_subtitle' => array(
 
+		/************************************************************
+		 * Configuration parameters for adding the meta box.
+		 * For more information on each of the parameters, see this
+		 * article in Codex:
+		 * @link https://developer.wordpress.org/reference/functions/add_meta_box/#parameters
+		 ***********************************************************/
 		'add_meta_box' => array(
 			// Title of the meta box
 			'title'         => 'Add a Subtitle',
@@ -30,7 +41,10 @@ return array(
 			'callback_args' => array(),
 		),
 
-		// Custom fields (metadata)
+		/************************************************************
+		 * Configure each custom field, specifying its meta_key, default
+		 * value, delete_state, and sanitizing function.
+		 ***********************************************************/
 		'custom_fields'     => array(
 			'subtitle'      => array(
 				'default'      => '',
@@ -44,6 +58,9 @@ return array(
 			),
 		),
 
+		/************************************************************
+		 * Configure the absolute path to your meta box's view file.
+		 ***********************************************************/
 		'view' => METABOX_DIR . 'src/views/subtitle-meta-box.php',
 	),
 );

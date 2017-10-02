@@ -10,10 +10,23 @@
  */
 
 return array(
-	// store key => config for this meta box.
-	'your-meta-box-id' => array(
+	/************************************************************
+	 * Configure a unique ID for your meta box.
+	 *
+	 * This ID is used when running add_meta_box and for storing
+	 * in the Config Store.
+	 ***********************************************************/
+	'unique-meta-box-id' => array(
+
+		/************************************************************
+		 * Configuration parameters for adding the meta box.
+		 * For more information on each of the parameters, see this
+		 * article in Codex:
+		 * @link https://developer.wordpress.org/reference/functions/add_meta_box/#parameters
+		 ***********************************************************/
 
 		'add_meta_box' => array(
+			// 'id' is not needed as the meta box id/key is defined above
 			// Title of the meta box
 			'title'         => '',
 			// The screen or screens on which to show the box
@@ -30,8 +43,12 @@ return array(
 			'callback_args' => array(),
 		),
 
-		// Custom fields (metadata)
+		/************************************************************
+		 * Configure each custom field, specifying its meta_key, default
+		 * value, delete_state, and sanitizing function.
+		 ***********************************************************/
 		'custom_fields'     => array(
+			// specify this field's meta key.  It's used in the database.
 			'meta_key'      => array(
 				// Specify the custom field's default value.
 				'default'      => '',
@@ -44,7 +61,9 @@ return array(
 			),
 		),
 
-		// Absolute path to your meta box's view file.
+		/************************************************************
+		 * Configure the absolute path to your meta box's view file.
+		 ***********************************************************/
 		'view' => '',
 	),
 );

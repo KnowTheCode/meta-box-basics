@@ -1,3 +1,3 @@
-## 1.0.0 (21.Sept.2017)
+## 1.0.0 (30.Sept.2017)
 
 Initial release.
