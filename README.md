@@ -86,7 +86,7 @@ To create a configuration file for your meta box, follow these instructions:
 
 1. Copy the default configuration file found in `src/metadata/default`.
 2. Store it in `config/name-of-your-meta-box`.
-3. Specific the unique meta box ID in the [`''unique-meta-box-id'` key](https://github.com/KnowTheCode/meta-box-basics/blob/reusable/src/metadata/default/meta-box-config.php#L19).  This key is used as the ID and for storage in the config store.
+3. Specific the unique meta box ID in the [`'unique-meta-box-id'` key](https://github.com/KnowTheCode/meta-box-basics/blob/reusable/src/metadata/default/meta-box-config.php#L19).  This key is used as the ID and for storage in the config store.
 4. In the [`add_meta_box` section](https://github.com/KnowTheCode/meta-box-basics/blob/reusable/src/metadata/default/meta-box-config.php#L28), fill in the title.  Then customize any of the other parameters to your specific needs.
 5. In the [custom fields section](https://github.com/KnowTheCode/meta-box-basics/blob/reusable/src/metadata/default/meta-box-config.php#L50), for each custom field, use the template provided and then:
     - Specify its meta key
@@ -94,3 +94,66 @@ To create a configuration file for your meta box, follow these instructions:
     - Specific its delete state
     - Specify its sanitizing function 
 6. Add the absolute path your view file in the [view section](https://github.com/KnowTheCode/meta-box-basics/blob/reusable/src/metadata/default/meta-box-config.php#L67).
+
+
+#### Practical Example
+
+Here is an example of a subtitle meta box that has 2 custom fields: `subtitle` and `show_subtitle`:
+
+```
+return array(
+	/************************************************************
+	 * Configure a unique ID for your meta box.
+	 *
+	 * This ID is used when running add_meta_box and for storing
+	 * in the Config Store.
+	 ***********************************************************/
+	'metabox_subtitle' => array(
+
+		/************************************************************
+		 * Configuration parameters for adding the meta box.
+		 * For more information on each of the parameters, see this
+		 * article in Codex:
+		 * @link https://developer.wordpress.org/reference/functions/add_meta_box/#parameters
+		 ***********************************************************/
+		'add_meta_box' => array(
+			// Title of the meta box
+			'title'         => 'Add a Subtitle',
+			// The screen or screens on which to show the box
+			// such as a post type, link, comment, etc.
+			'screens'       => array( 'post' ),
+			// (Optional) The context within the screen where this will display.
+			// Choices: normal, side, or advanced (default).
+			'context'       => 'advanced',
+			// (Optional) Sets the priority of when the meta box will render.
+			// Choices: high, low, or default (which is the default).
+			'priority'      => 'default',
+			// (Optional) You can send arguments to your render callback.
+			// Send as an array of arguments.
+			'callback_args' => array(),
+		),
+
+		/************************************************************
+		 * Configure each custom field, specifying its meta_key, default
+		 * value, delete_state, and sanitizing function.
+		 ***********************************************************/
+		'custom_fields'     => array(
+			'subtitle'      => array(
+				'default'      => '',
+				'delete_state' => '',
+				'sanitize'     => 'sanitize_text_field',
+			),
+			'show_subtitle' => array(
+				'default'      => 0,
+				'delete_state' => 0,
+				'sanitize'     => 'intval',
+			),
+		),
+
+		/************************************************************
+		 * Configure the absolute path to your meta box's view file.
+		 ***********************************************************/
+		'view' => METABOX_DIR . 'src/views/subtitle-meta-box.php',
+	),
+);
+```
