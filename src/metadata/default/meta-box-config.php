@@ -50,6 +50,9 @@ return array(
 		'custom_fields'     => array(
 			// specify this field's meta key.  It's used in the database.
 			'meta_key'      => array(
+				// True - means it's a single
+				// False - means it's an array
+				'is_single'    => true,
 				// Specify the custom field's default value.
 				'default'      => '',
 				// What is the state that signals to delete this meta key

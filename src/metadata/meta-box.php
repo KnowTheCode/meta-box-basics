@@ -59,7 +59,7 @@ function render_meta_box( WP_Post $post, array $meta_box_args ) {
 	}
 
 	// Security with a nonce
-	wp_nonce_field( $meta_box_key . '_action', $meta_box_key . '_name' );
+	wp_nonce_field( $meta_box_key . '_nonce_action', $meta_box_key . '_nonce_name' );
 
 	$custom_fields = get_custom_fields_values( $post->ID, $meta_box_key, $config['custom_fields'] );
 
@@ -82,7 +82,7 @@ function get_custom_fields_values( $post_id, $meta_box_key, array $config ) {
 	$custom_fields = array();
 
 	foreach ( $config as $meta_key => $meta_config ) {
-		$custom_fields[ $meta_key ] = get_post_meta( $post_id, $meta_key, true );
+		$custom_fields[ $meta_key ] = get_post_meta( $post_id, $meta_key, $meta_config['is_single'] );
 
 		if ( ! $custom_fields[ $meta_key ] ) {
 			$custom_fields[ $meta_key ] = $meta_config['default'];
@@ -143,8 +143,8 @@ function is_okay_to_save_meta_box( $meta_box_key ) {
 	}
 
 	if ( ! wp_verify_nonce(
-		$_POST[ $meta_box_key . '_name' ],
-		$meta_box_key . '_action'
+		$_POST[ $meta_box_key . '_nonce_name' ],
+		$meta_box_key . '_nonce_action'
 	) ) {
 		return false;
 	}
