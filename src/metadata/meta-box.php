@@ -23,17 +23,16 @@ add_action( 'admin_menu', __NAMESPACE__ . '\register_meta_boxes' );
  * @return void
  */
 function register_meta_boxes() {
-	$keys = meta_box_keys();
+	$keys = get_meta_box_keys();
 
 	foreach ( $keys as $meta_box_key ) {
-
-		$config = configStore\getConfig( $meta_box_key, 'add_meta_box' );
+		$config = configStore\getConfigParameter( $meta_box_key, 'add_meta_box' );
 
 		add_meta_box(
 			$meta_box_key,
 			$config['title'],
 			__NAMESPACE__ . '\render_meta_box',
-			$config['screens'],
+			$config['screen'],
 			$config['context'],
 			$config['priority'],
 			$config['callback_args']
@@ -118,7 +117,7 @@ add_action( 'save_post', __NAMESPACE__ . '\save_meta_boxes' );
  * @return void
  */
 function save_meta_boxes( $post_id ) {
-	$keys = meta_box_keys();
+	$keys = get_meta_box_keys();
 
 	foreach ( $keys as $meta_box_key ) {
 		if ( is_okay_to_save_meta_box( $meta_box_key ) ) {
@@ -170,7 +169,7 @@ function is_okay_to_save_meta_box( $meta_box_key ) {
 function save_custom_fields( $meta_box_key, $post_id ) {
 	// Get and initialize the custom fields configuration.
 	$config = init_custom_fields_config(
-		configStore\getConfig( $meta_box_key, 'custom_fields' )
+		configStore\getConfigParameter( $meta_box_key, 'custom_fields' )
 	);
 
 	// Merge with defaults.

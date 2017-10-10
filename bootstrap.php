@@ -52,7 +52,7 @@ function init_constants() {
  */
 function autoload_files() {
 	$files = array(
-		'/src/config-store/config-store.php',
+		'/src/config-store/module.php',
 		'/src/metadata/module.php'
 	);
 
@@ -76,7 +76,8 @@ function launch() {
 	// Load configurations
 	metaData\autoload_configurations(
 		array(
-			'metabox_subtitle' => __DIR__ . '/config/subtitle.php'
+			__DIR__ . '/config/subtitle.php',
+			__DIR__ . '/config/portfolio.php'
 		)
 	);
 }

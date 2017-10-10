@@ -16,46 +16,44 @@ use KnowTheCode\ConfigStore as configStore;
 define( 'METADATA_DIR', __DIR__ );
 
 /**
- * Autoload module files.
+ * Autoload the Configurations.
  *
  * @since 1.0.0
  *
- * @return void
- */
-function autoload() {
-	$files = array(
-		'meta-box.php',
-	);
-
-	foreach ( $files as $file ) {
-		require __DIR__ . '/' . $file;
-	}
-}
-
-/**
- * Description.
- *
- * @since 1.0.0
- *
- * @param array $config_files
+ * @param array $config_files Array of configuration files to load.
  *
  * @return void
  */
 function autoload_configurations( array $config_files ) {
-	$meta_box_keys = configStore\loadConfigs( $config_files );
+	// Load the defaults, as we'll merge them upon loading into the store.
+	$defaults      = (array) require __DIR__ . '/default/meta-box-config.php';
+	$defaults      = current( $defaults );
 
-	meta_box_keys( $meta_box_keys );
+	// Loop through the config files and load them into the store.
+	// Store the returned key into our array so that we can store them separately.
+	foreach ( $config_files as $path_to_file ) {
+		configStore\loadConfigFromFilesystem( $path_to_file, $defaults );
+	}
 }
 
-function meta_box_keys( $keys_to_store = false ) {
-	static $keys = array();
+/**
+ * Get the meta box keys.
+ *
+ * @since 1.0.0
+ *
+ * @return array|bool
+ */
+function get_meta_box_keys() {
+	return configStore\getKeys();
+}
 
-	if ( is_array( $keys_to_store ) ) {
-		$keys = $keys_to_store;
-	}
-
-	return $keys;
-
+/**
+ * Autoload the module's files.
+ *
+ * @since 1.0.0
+ */
+function autoload() {
+	require __DIR__ . '/meta-box.php';
 }
 
 autoload();
