@@ -52,7 +52,7 @@ function _the_store( $store_key = '', $config_to_store = array() ) {
 	if ( ! array_key_exists( $store_key, $configStore ) ) {
 		throw new Exception( sprintf(
 			__( 'Configuration for [%s] does not exist in the ConfigStore.', 'config-store' ),
-			$store_key
+			esc_html( $store_key )
 		) );
 	}
 

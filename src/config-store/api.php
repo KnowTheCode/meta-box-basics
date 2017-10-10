@@ -42,8 +42,9 @@ function getConfigParameter( $store_key, $parameter_key ) {
 
 	if ( ! array_key_exists( $parameter_key, $config ) ) {
 		throw new Exception( sprintf(
-			__( 'Configuration for [%s] does not exist in the ConfigStore.', 'config-store' ),
-			$store_key
+			__( 'The [%s] parameter does not exist in the [%s] configuration.', 'config-store' ),
+			esc_html( $parameter_key ),
+			esc_html( $store_key )
 		) );
 	}
 
