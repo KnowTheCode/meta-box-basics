@@ -86,12 +86,14 @@ function loadConfig( $store_key, $config ) {
 }
 
 /**
- * Gets the stores keys.
+ * Gets the store's keys.
  *
  * @since 1.0.0
  *
- * @return array|bool
+ * @return array
  */
 function getKeys() {
-	return _the_key_store();
+	$config_store = _the_store();
+
+	return array_keys( $config_store );
 }

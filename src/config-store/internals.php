@@ -30,12 +30,17 @@ use Exception;
  *                      else returns the array of configuration parameters.
  * @throws Exception
  */
-function _the_store( $store_key, $config_to_store = array() ) {
+function _the_store( $store_key = '', $config_to_store = array() ) {
 	static $configStore = array();
+
+	// Get All
+
+	if ( ! $store_key && ! $config_to_store ) {
+		return $configStore;
+	}
 
 	// Store
 	if ( $config_to_store ) {
-		_the_key_store( $store_key );
 		$configStore[ $store_key ] = $config_to_store;
 
 		return true;
@@ -52,32 +57,6 @@ function _the_store( $store_key, $config_to_store = array() ) {
 	}
 
 	return $configStore[ $store_key ];
-}
-
-/**
- * The Key Store.
- *
- * 1. When $store_key has a value, then that key is stored.
- * 2. Else, all of the keys are returned.
- *
- * @since 1.0.0
- *
- * @param string $store_key
- *
- * @return array|bool
- */
-function _the_key_store( $store_key = '' ) {
-	static $store_keys = array();
-
-	// Store.
-	if ( $store_key ) {
-		$store_keys[ $store_key ] = $store_key;
-
-		return true;
-	}
-
-	// Get.
-	return $store_keys;
 }
 
 /**
