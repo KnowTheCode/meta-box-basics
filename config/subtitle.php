@@ -20,7 +20,7 @@ return array(
 	 * This ID is used when running add_meta_box, for storing
 	 * in the Config Store, for the view file, and save $_POST.
 	 ***********************************************************/
-	'subtitle' => array(
+	'meta_box.subtitle' => array(
 
 		/************************************************************
 		 * Configuration parameters for adding the meta box.

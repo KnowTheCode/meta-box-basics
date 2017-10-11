@@ -93,8 +93,30 @@ function loadConfig( $store_key, $config ) {
  *
  * @return array
  */
-function getKeys() {
+function getAllKeys() {
 	$config_store = _the_store();
 
 	return array_keys( $config_store );
+}
+
+/**
+ * Get all store keys that start with the specific prefix.
+ * Allows caller to fetch module and component specific keys
+ * and configurations.
+ *
+ * @since 1.0.0
+ *
+ * @param string $starts_with (Optional) Get all keys that start with this prefix.
+ *
+ * @return array
+ */
+function getAllKeysStartingWith( $starts_with ) {
+	$filtered_keys = array();
+	foreach( getAllKeys() as $key ) {
+		if ( str_starts_with( $key, $starts_with ) ) {
+			$filtered_keys[] = $key;
+		}
+	}
+
+	return $filtered_keys;
 }

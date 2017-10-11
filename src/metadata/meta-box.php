@@ -29,7 +29,7 @@ function register_meta_boxes() {
 		$config = configStore\getConfigParameter( $meta_box_key, 'add_meta_box' );
 
 		add_meta_box(
-			$meta_box_key,
+			get_meta_box_key( $meta_box_key ),
 			$config['title'],
 			__NAMESPACE__ . '\render_meta_box',
 			$config['screen'],
@@ -52,7 +52,7 @@ function register_meta_boxes() {
  */
 function render_meta_box( WP_Post $post, array $meta_box_args ) {
 	$meta_box_key = $meta_box_args['id'];
-	$config       = configStore\getConfig( $meta_box_key );
+	$config       = configStore\getConfig( 'meta_box.' . $meta_box_key );
 	if ( ! $config ) {
 		return;
 	}
@@ -66,46 +66,6 @@ function render_meta_box( WP_Post $post, array $meta_box_args ) {
 	include $config['view'];
 }
 
-/**
- * Get the values for each custom field.
- *
- * @since 1.0.0
- *
- * @param int $post_id Post's ID
- * @param string $meta_box_key Meta box's key (ID) - used to identify this meta box
- * @param array $config Custom field's configuration parameters
- *
- * @return array
- */
-function get_custom_fields_values( $post_id, $meta_box_key, array $config ) {
-	$custom_fields = array();
-
-	foreach ( $config as $meta_key => $meta_config ) {
-		$custom_fields[ $meta_key ] = get_post_meta( $post_id, $meta_key, $meta_config['is_single'] );
-
-		if ( ! $custom_fields[ $meta_key ] ) {
-			$custom_fields[ $meta_key ] = $meta_config['default'];
-		}
-	}
-
-	/**
-	 * Filter the custom fields values before rendering to the meta box.
-	 *
-	 * Allows for processing and filtering work before the meta box is sent out to the browser.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $custom_fields Array of custom fields values
-	 * @param string $meta_box_key Meta box's key (ID) - used to identify this meta box
-	 * @param int $post_id Post's ID
-	 */
-	return (array) apply_filters( 'filter_meta_box_custom_fields',
-		$custom_fields,
-		$meta_box_key,
-		$post_id
-	);
-}
-
 add_action( 'save_post', __NAMESPACE__ . '\save_meta_boxes' );
 /**
  * Description.
@@ -117,12 +77,16 @@ add_action( 'save_post', __NAMESPACE__ . '\save_meta_boxes' );
  * @return void
  */
 function save_meta_boxes( $post_id ) {
-	$keys = get_meta_box_keys();
+	foreach ( get_meta_box_keys() as $full_key ) {
+		$meta_box_key = get_meta_box_key( $full_key );
 
-	foreach ( $keys as $meta_box_key ) {
-		if ( is_okay_to_save_meta_box( $meta_box_key ) ) {
-			save_custom_fields( $meta_box_key, $post_id );
+		if ( ! is_okay_to_save_meta_box( $meta_box_key ) ) {
+			continue;
 		}
+
+		$config = configStore\getConfigParameter( $full_key, 'custom_fields' );
+
+		save_custom_fields( $config, $meta_box_key, $post_id );
 	}
 }
 
@@ -157,44 +121,6 @@ function is_okay_to_save_meta_box( $meta_box_key ) {
 }
 
 /**
- * Save the custom fields for this meta box.
- *
- * @since 1.0.0
- *
- * @param string $meta_box_key Meta box's key (ID) - used to identify this meta box
- * @param int $post_id Post's ID
- *
- * @return void
- */
-function save_custom_fields( $meta_box_key, $post_id ) {
-	// Get and initialize the custom fields configuration.
-	$config = init_custom_fields_config(
-		configStore\getConfigParameter( $meta_box_key, 'custom_fields' )
-	);
-
-	// Merge with defaults.
-	$metadata = wp_parse_args(
-		$_POST[ $meta_box_key ],
-		$config['default']
-	);
-
-	foreach ( $metadata as $meta_key => $value ) {
-		// if no value, delete the post meta record.
-		if ( $config['delete_state'][$meta_key] === $value ) {
-			delete_post_meta( $post_id, $meta_key );
-			continue;
-		}
-
-		// Invoke the sanitize function as configured to
-		// sanitize the value before storing.
-		$sanitize_func = $config['sanitize'][ $meta_key ];
-		$value = $sanitize_func( $value );
-
-		update_post_meta( $post_id, $meta_key, $value );
-	}
-}
-
-/**
  * Initialize the custom fields configuration parameters, rearrange them
  * into the array structure needed for the saving process.
  *
@@ -209,7 +135,7 @@ function save_custom_fields( $meta_box_key, $post_id ) {
  */
 function init_custom_fields_config( array $config ) {
 	$custom_fields_config = array(
-		'default'     => array(),
+		'default'      => array(),
 		'delete_state' => array(),
 		'sanitize'     => array(),
 	);

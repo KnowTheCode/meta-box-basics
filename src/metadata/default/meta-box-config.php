@@ -20,7 +20,7 @@ return array(
 	 * This ID is used when running add_meta_box, for storing
 	 * in the Config Store, for the view file, and save $_POST.
 	 ***********************************************************/
-	'unique-meta-box-id' => array(
+	'meta_box.unique-meta-box-id' => array(
 
 		/************************************************************
 		 * Configuration parameters for adding the meta box.

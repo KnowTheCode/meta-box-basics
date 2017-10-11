@@ -102,3 +102,22 @@ function _load_config_from_filesystem( $path_to_file ) {
 function _merge_with_defaults( array $config, array $defaults ) {
 	return array_replace_recursive( $defaults, $config );
 }
+
+if ( ! function_exists( 'str_starts_with' ) ) :
+	/**
+	 * Checks if a string starts with a character or substring.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $haystack  The string to be searched
+	 * @param string $needle    The character or substring to
+	 *                          find at the start of the $haystack
+	 * @param string $encoding  Default is UTF-8
+	 *
+	 * @return bool
+	 */
+	function str_starts_with( $haystack, $needle, $encoding = 'UTF-8' ) {
+		$needle_length = mb_strlen( $needle, $encoding );
+		return ( mb_substr( $haystack, 0, $needle_length, $encoding ) === $needle );
+	}
+endif;

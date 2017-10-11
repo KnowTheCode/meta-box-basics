@@ -26,8 +26,8 @@ define( 'METADATA_DIR', __DIR__ );
  */
 function autoload_configurations( array $config_files ) {
 	// Load the defaults, as we'll merge them upon loading into the store.
-	$defaults      = (array) require __DIR__ . '/default/meta-box-config.php';
-	$defaults      = current( $defaults );
+	$defaults = (array) require __DIR__ . '/default/meta-box-config.php';
+	$defaults = current( $defaults );
 
 	// Loop through the config files and load them into the store.
 	// Store the returned key into our array so that we can store them separately.
@@ -37,23 +37,19 @@ function autoload_configurations( array $config_files ) {
 }
 
 /**
- * Get the meta box keys.
- *
- * @since 1.0.0
- *
- * @return array|bool
- */
-function get_meta_box_keys() {
-	return configStore\getKeys();
-}
-
-/**
  * Autoload the module's files.
  *
  * @since 1.0.0
  */
 function autoload() {
-	require __DIR__ . '/meta-box.php';
+	$files = array(
+		'helpers.php',
+		'meta-box.php',
+	);
+
+	foreach ( $files as $filename ) {
+		require __DIR__ . '/' . $filename;
+	}
 }
 
 autoload();
