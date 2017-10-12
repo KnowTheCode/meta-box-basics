@@ -25,12 +25,11 @@ function autoload_configurations( array $config_files ) {
 	$defaults = (array) require __DIR__ . '/defaults/meta-box-config.php';
 	$defaults = current( $defaults );
 
-	$keys = array();
 	foreach ( $config_files as $config_file ) {
-		$keys[] = configStore\loadConfigFromFilesystem( $config_file, $defaults );
-	}
+		$store_key = configStore\loadConfigFromFilesystem( $config_file, $defaults );
 
-	init_custom_fields_configuration( $keys );
+		init_custom_fields_configuration( $store_key );
+	}
 }
 
 /**
@@ -38,22 +37,20 @@ function autoload_configurations( array $config_files ) {
  *
  * @since 1.0.0
  *
- * @param array $store_keys Array of store keys
+ * @param string $store_key Configuration's store key.
  *
  * @return void
  */
-function init_custom_fields_configuration( array $store_keys ) {
-	foreach ( $store_keys as $store_key ) {
-		$config = configStore\getConfig( $store_key );
+function init_custom_fields_configuration( $store_key ) {
+	$config = configStore\getConfig( $store_key );
 
-		$default_config = array_shift( $config['custom_fields'] );
+	$default_config = array_shift( $config['custom_fields'] );
 
-		foreach ( $config['custom_fields'] as $meta_key => $custom_field_config ) {
-			$config['custom_fields'][ $meta_key ] = array_merge( $default_config, $custom_field_config );
-		}
-
-		configStore\loadConfig( $store_key, $config );
+	foreach ( $config['custom_fields'] as $meta_key => $custom_field_config ) {
+		$config['custom_fields'][ $meta_key ] = array_merge( $default_config, $custom_field_config );
 	}
+
+	configStore\loadConfig( $store_key, $config );
 }
 
 /**

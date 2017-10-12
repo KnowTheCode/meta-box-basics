@@ -11,8 +11,6 @@
 
 namespace KnowTheCode\ConfigStore;
 
-use Exception;
-
 /**
  * Get a specific configuration from the store.
  *
@@ -35,17 +33,19 @@ function getConfig( $store_key ) {
  * @param string $parameter_key
  *
  * @return mixed
- * @throws Exception
+ * @throws \Exception
  */
 function getConfigParameter( $store_key, $parameter_key ) {
-	$config = (array) getConfig( $store_key );
+	$config = getConfig( $store_key );
 
 	if ( ! array_key_exists( $parameter_key, $config ) ) {
-		throw new Exception( sprintf(
-			__( 'The [%s] parameter does not exist in the [%s] configuration.', 'config-store' ),
-			esc_html( $parameter_key ),
-			esc_html( $store_key )
-		) );
+		throw new \Exception(
+			sprintf(
+				__('The configuration parameter [%s] within [%s] does not exist in this configuration', 'config-store'),
+				esc_html( $parameter_key ),
+				esc_html( $store_key )
+			)
+		);
 	}
 
 	return $config[ $parameter_key ];
@@ -58,13 +58,12 @@ function getConfigParameter( $store_key, $parameter_key ) {
  * @since 1.0.0
  *
  * @param string $path_to_file Absolute path to the config file.
- * @param array $defaults (Optional) Defaults to merge the parameters with before storing.
- *
- * @return string Returns the store key.
+ * @param array $defaults (optional) Array of default parameters.
  */
 function loadConfigFromFilesystem( $path_to_file, array $defaults = array() ) {
 	list( $store_key, $config ) = _load_config_from_filesystem( $path_to_file );
 
+	// Merge with any defaults.
 	if ( $defaults ) {
 		$config = _merge_with_defaults( $config, $defaults );
 	}
@@ -87,7 +86,7 @@ function loadConfig( $store_key, $config ) {
 }
 
 /**
- * Gets the store's keys.
+ * Get all the store keys.
  *
  * @since 1.0.0
  *
@@ -111,8 +110,15 @@ function getAllKeys() {
  * @return array
  */
 function getAllKeysStartingWith( $starts_with ) {
+
+	return array_filter( getAllKeys(), function( $key ) use ($starts_with) {
+		return str_starts_with( $key, $starts_with );
+	});
+
+
 	$filtered_keys = array();
-	foreach( getAllKeys() as $key ) {
+
+	foreach ( getAllKeys() as $key ) {
 		if ( str_starts_with( $key, $starts_with ) ) {
 			$filtered_keys[] = $key;
 		}

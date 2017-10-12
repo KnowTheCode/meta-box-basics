@@ -10,14 +10,9 @@
  */
 namespace KnowTheCode\ConfigStore;
 
-/**
- * Autoload the module's files.
- *
- * @since 1.0.0
- */
 function autoload() {
-	require __DIR__ . '/api.php';
-	require __DIR__ . '/internals.php';
+	include __DIR__ . '/api.php';
+	include __DIR__ . '/internals.php';
 }
 
 autoload();
