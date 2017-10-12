@@ -1,38 +1,58 @@
 <?php
 /**
- * Description
+ * Metadata Module - bootstrap file.
  *
- * @package     ${NAMESPACE}
+ * @package     KnowTheCode\Metadata
  * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-
 namespace KnowTheCode\Metadata;
 
 use KnowTheCode\ConfigStore as configStore;
 
-define( 'METADATA_DIR', __DIR__ );
-
 /**
- * Autoload the Configurations.
+ * Autoload the module's configuration models.
  *
  * @since 1.0.0
  *
- * @param array $config_files Array of configuration files to load.
+ * @param array $config_files Array of configuration models files.
  *
  * @return void
  */
 function autoload_configurations( array $config_files ) {
-	// Load the defaults, as we'll merge them upon loading into the store.
-	$defaults = (array) require __DIR__ . '/default/meta-box-config.php';
+	$defaults = (array) require __DIR__ . '/defaults/meta-box-config.php';
 	$defaults = current( $defaults );
 
-	// Loop through the config files and load them into the store.
-	// Store the returned key into our array so that we can store them separately.
-	foreach ( $config_files as $path_to_file ) {
-		configStore\loadConfigFromFilesystem( $path_to_file, $defaults );
+	$keys = array();
+	foreach ( $config_files as $config_file ) {
+		$keys[] = configStore\loadConfigFromFilesystem( $config_file, $defaults );
+	}
+
+	init_custom_fields_configuration( $keys );
+}
+
+/**
+ * Initialize the custom fields configurations.
+ *
+ * @since 1.0.0
+ *
+ * @param array $store_keys Array of store keys
+ *
+ * @return void
+ */
+function init_custom_fields_configuration( array $store_keys ) {
+	foreach ( $store_keys as $store_key ) {
+		$config = configStore\getConfig( $store_key );
+
+		$default_config = array_shift( $config['custom_fields'] );
+
+		foreach ( $config['custom_fields'] as $meta_key => $custom_field_config ) {
+			$config['custom_fields'][ $meta_key ] = array_merge( $default_config, $custom_field_config );
+		}
+
+		configStore\loadConfig( $store_key, $config );
 	}
 }
 
@@ -40,16 +60,12 @@ function autoload_configurations( array $config_files ) {
  * Autoload the module's files.
  *
  * @since 1.0.0
+ *
+ * @return void
  */
 function autoload() {
-	$files = array(
-		'helpers.php',
-		'meta-box.php',
-	);
-
-	foreach ( $files as $filename ) {
-		require __DIR__ . '/' . $filename;
-	}
+	include __DIR__ . '/helpers.php';
+	include __DIR__ . '/meta-box.php';
 }
 
 autoload();

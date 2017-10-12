@@ -94,8 +94,8 @@ function _load_config_from_filesystem( $path_to_file ) {
  *
  * @since 1.0.0
  *
- * @param array $config
- * @param array $defaults
+ * @param array $config Array of configuration parameters
+ * @param array $defaults Array of default parameters
  *
  * @return array
  */
