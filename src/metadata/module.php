@@ -22,7 +22,7 @@ use KnowTheCode\ConfigStore as configStore;
  * @return void
  */
 function autoload_configurations( array $config_files ) {
-	$defaults = (array) require __DIR__ . '/defaults/meta-box-config.php';
+	$defaults = (array) require __DIR__ . '/default/meta-box-config.php';
 	$defaults = current( $defaults );
 
 	foreach ( $config_files as $config_file ) {
